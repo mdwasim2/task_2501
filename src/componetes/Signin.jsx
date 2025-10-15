@@ -1,9 +1,10 @@
 import {
-    getAuth,
-    GoogleAuthProvider,
-    signInWithEmailAndPassword,
-    signInWithPopup
+  getAuth,
+  GoogleAuthProvider,
+  signInWithEmailAndPassword,
+  signInWithPopup
 } from "firebase/auth";
+import { getDatabase, ref, set } from "firebase/database";
 import { useState } from 'react';
 import toast from 'react-hot-toast';
 import { useDispatch } from "react-redux";
@@ -14,6 +15,7 @@ import { addUser } from "../slices/userSlice";
 
 const Signin = () => {
     const auth = getAuth(app);
+     const db = getDatabase();
     const navigate = useNavigate()
     const dispatch = useDispatch()
 
@@ -78,6 +80,12 @@ const Signin = () => {
 
             
             const user = result.user;
+
+            // data store in database 
+            set(ref(db, "users/" + user.uid), {
+              fullname: user.displayName, 
+              email : user.email 
+            });
             toast.success(" Login Successfully ");
             dispatch(addUser(user));
             localStorage.setItem("user", JSON.stringify(user));

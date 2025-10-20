@@ -1,51 +1,32 @@
-const users = [
-  {
-    id: 1,
-    name: "Jane Cooper",
-    email: "jane.cooper@example.com",
-    role: "Admin",
-    avatar: "https://i.pravatar.cc/150?img=47",
-  },
-  {
-    id: 2,
-    name: "Cody Fisher",
-    email: "cody.fisher@example.com",
-    role: "User",
-    avatar: "https://i.pravatar.cc/150?img=12",
-  },
-  {
-    id: 3,
-    name: "Esther Howard",
-    email: "esther.howard@example.com",
-    role: "Moderator",
-    avatar: "https://i.pravatar.cc/150?img=32",
-  },
-  {
-    id: 3,
-    name: "Esther Howard",
-    email: "esther.howard@example.com",
-    role: "Moderator",
-    avatar: "https://i.pravatar.cc/150?img=32",
-  },
-  {
-    id: 3,
-    name: "Esther Howard",
-    email: "esther.howard@example.com",
-    role: "Moderator",
-    avatar: "https://i.pravatar.cc/150?img=32",
-  },
-  {
-    id: 3,
-    name: "Esther Howard",
-    email: "esther.howard@example.com",
-    role: "Moderator",
-    avatar: "https://i.pravatar.cc/150?img=32",
-  },
-];
+import { getDatabase, onValue, ref } from "firebase/database";
+import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+
 
 const FriendList = () => {
+   let user = useSelector((state) => state.userInfo.value);
+   const [friendrequestList, setFriendrequrestList]=useState([])
+
+   
+  let db = getDatabase()
+    useEffect(() => {
+      const friendrequestRef = ref(db, "friendrequest/");
+      onValue(friendrequestRef, (snapshot) => {
+        let array = [];
+        snapshot.forEach((item) => {
+         
+            if (user.uid == item.val().reciverid){
+
+              array.push({ ...item.val(), id: item.key });
+
+            }
+         
+        });
+       setFriendrequrestList(array)
+      });
+    }, []);
   return (
-    <div className="max-w-sm h-[350px] rounded-xl border border-gray-200 bg-white shadow-sm overflow-hidden">
+    <div className="w-sm h-[350px] rounded-xl border border-gray-200 bg-white shadow-sm overflow-hidden">
       <div className="px-5 py-4 border-b border-gray-100">
         <h2 className="text-lg font-semibold text-gray-900">Friend List</h2>
       </div>
@@ -54,24 +35,24 @@ const FriendList = () => {
         role="list"
         className="divide-y divide-gray-100 overflow-y-auto h-[calc(420px-84px)]"
       >
-        {users.map((user) => (
+        {friendrequestList.map((user) => (
           <li
             key={user.id}
             className="flex items-center justify-between gap-x-4 px-5 py-4 transition-all duration-200 "
           >
+            {console.log(user)}
             <div className="flex items-center gap-x-4">
-              {user.avatar ? (
-                <img
-                  src={user.avatar}
-                  alt={user.name}
-                  className="h-10 w-10 rounded-full object-cover ring-1 ring-gray-200"
-                />
-              ) : (
-                <UserCircleIcon className="h-10 w-10 text-gray-400" />
-              )}
+              <img
+                src={user.avatar}
+                alt={user.name}
+                className="h-10 w-10 rounded-full object-cover ring-1 ring-gray-200"
+              />
+
               <div className="min-w-0">
-                <p className="text-sm font-medium text-gray-900">{user.name}</p>
-                <p className="truncate text-xs text-gray-500">{user.email}</p>
+                <p className="text-sm font-medium text-gray-900">
+                  {user.sendername}
+                </p>
+                <p className="truncate text-xs text-gray-500">{user.senderemail}</p>
               </div>
             </div>
 

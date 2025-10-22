@@ -6,6 +6,7 @@ const UserList = () => {
   const db = getDatabase();
   const [userList, setUserList] = useState([]);
   const [friendrequestId, setFriendrequrestId] = useState([]);
+  const [friendId, setFriendId] = useState([]);
   const [loading, setLoading] = useState(true);
   let user = useSelector((state) => state.userInfo.value);
 
@@ -31,8 +32,18 @@ const UserList = () => {
         array.push(item.val().senderid + item.val().reciverid);
 
         setFriendrequrestId(array);
+      });
+    });
+  }, []);
+  useEffect(() => {
+    const friendrequestRef = ref(db, "friendlist/");
+    onValue(friendrequestRef, (snapshot) => {
+      let array = [];
+      snapshot.forEach((item) => {
+        array.push(item.val().senderid + item.val().reciverid);
 
-        console.log(friendrequestId);
+        setFriendId(array);
+
       });
     });
   }, []);
@@ -97,17 +108,23 @@ const UserList = () => {
                 </div>
               </div>
 
-              {friendrequestId.includes(user.uid + item.id) ||
-              friendrequestId.includes(item.id + user.uid) ? (
-                <h1>R</h1>
-              ) : (
-                <button
-                  onClick={() => handleFndrequrest(item)}
-                  class="bg-teal-600 cursor-pointer text-white px-5 py-2 rounded-lg "
-                >
-                  Add
-                </button>
-              )}
+              {friendId.includes(user.uid + item.id) ||
+                friendId.includes(item.id + user.uid) ?
+                <h1>F</h1>
+                :
+
+
+                friendrequestId.includes(user.uid + item.id) ||
+                  friendrequestId.includes(item.id + user.uid) ? (
+                  <h1>R</h1>
+                ) : (
+                  <button
+                    onClick={() => handleFndrequrest(item)}
+                    class="bg-teal-600 cursor-pointer text-white px-5 py-2 rounded-lg "
+                  >
+                    Add
+                  </button>
+                )}
             </li>
           ))
         )}

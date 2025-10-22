@@ -1,7 +1,7 @@
 import { useSelector } from "react-redux";
-import FriendList from "../componetes/home/FriendList";
 import Nav from "../componetes/home/Nav";
 import UserList from "../componetes/home/UserList";
+import FriendReqeustList from "../componetes/home/FriendRequestList";
 
 const Home = () => {
   let user = useSelector((state) => state.userInfo.value);
@@ -10,10 +10,10 @@ const Home = () => {
   return (
     <main>
       <div className="flex justify-center  gap-10 mt-2">
-        <FriendList />
+        <FriendReqeustList />
         <UserList />
       </div>
-      <Nav userinfo={user} />
+      {/* <Nav userinfo={user} /> */}
     </main>
   );
 };

@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { Outlet, useNavigate } from "react-router";
 import app from "../firebase.Config";
+import Nav from "../componetes/home/Nav";
 
 const RootlayOut = () => {
   let navigate = useNavigate();
@@ -20,7 +21,9 @@ const RootlayOut = () => {
   return (
     <>
       {/* <h1>Header</h1> */}
+
       <Outlet />
+      <Nav userinfo={user} />
       {/* <h1>Footer</h1> */}
     </>
   );

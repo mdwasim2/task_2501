@@ -8,36 +8,42 @@ import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router";
 import { addUser } from "../../slices/userSlice";
 
+
 const Nav = ({ userinfo }) => {
-    const auth = getAuth();
-    const dispatch = useDispatch()
-    const navigate = useNavigate()
+  const auth = getAuth();
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
   const [active, setActive] = useState("home");
   const [showModal, setShowModal] = useState(false);
-  const [showLogoutModal ,setShowLogoutModal]=useState(false)
+  const [showLogoutModal, setShowLogoutModal] = useState(false)
 
 
   const navItems = [
-    { id: "home", icon: <FaHome />, label: "Home" },
-    { id: "messages", icon: <MdMessage />, label: "Messages" },
+    { id: "", icon: <FaHome />, label: "Home" },
+    { id: "message", icon: <MdMessage />, label: "Messages" },
     { id: "profile", icon: <IoPersonCircle />, label: "Profile" },
     { id: "logout", icon: <IoMdLogOut />, label: "Logout" },
   ];
 
-  const handleNavClick = (id) => {
-    setActive(id);
-    if (id === "profile") {
+  const handleNavClick = (item) => {
+
+
+    setActive(item.id);
+    if (item.id === "profile") {
       setShowModal(true);
-    } else if (id === "logout") {
-        setShowLogoutModal(true)
-    }else{
-         setShowModal(false);
-         setShowLogoutModal(false);
+    } else if (item.id === "logout") {
+      setShowLogoutModal(true)
+    } else {
+      navigate(`/${item.id}`)
+      setShowModal(false);
+      setShowLogoutModal(false);
     }
+
+
   };
 
 
-  const handleLogout=()=>{
+  const handleLogout = () => {
     signOut(auth)
       .then(() => {
         localStorage.removeItem("user")
@@ -45,7 +51,7 @@ const Nav = ({ userinfo }) => {
         navigate("/signin")
       })
       .catch((error) => {
-       console.log(error)
+        console.log(error)
       });
   }
 
@@ -57,24 +63,21 @@ const Nav = ({ userinfo }) => {
           {navItems.map((item) => (
             <button
               key={item.id}
-              onClick={() => handleNavClick(item.id)}
-              className={`flex flex-col items-center transition-all duration-200 ${
-                active === item.id
-                  ? "scale-110"
-                  : "opacity-80 hover:opacity-100"
-              }`}
+              onClick={() => handleNavClick(item)}
+              className={`flex flex-col items-center transition-all duration-200 ${active === item.id
+                ? "scale-110"
+                : "opacity-80 hover:opacity-100"
+                }`}
             >
               <span
-                className={`text-3xl transition-colors ${
-                  active === item.id ? "text-white" : "text-gray-300"
-                }`}
+                className={`text-3xl transition-colors ${active === item.id ? "text-white" : "text-gray-300"
+                  }`}
               >
                 {item.icon}
               </span>
               <span
-                className={`text-[10px] font-medium mt-1 ${
-                  active === item.id ? "text-white" : "text-gray-400"
-                }`}
+                className={`text-[10px] font-medium mt-1 ${active === item.id ? "text-white" : "text-gray-400"
+                  }`}
               >
                 {item.label}
               </span>

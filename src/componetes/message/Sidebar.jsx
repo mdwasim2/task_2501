@@ -1,9 +1,12 @@
 import { getDatabase, onValue, ref } from 'firebase/database';
 import React, { useEffect, useState } from 'react'
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { selecteduser } from '../../slices/messageSlice';
 
 const Sidebar = () => {
      let user = useSelector((state) => state.userInfo.value);
+     let selected = useSelector((state)=>state.selectedUser.value)
+     const dispatch = useDispatch()
      let db = getDatabase()
      let [friendList, setFriendlist] = useState([])
      useEffect(() => {
@@ -21,6 +24,15 @@ const Sidebar = () => {
           });
      }, []);
 
+
+     let handleSelectFriend=(item)=>{
+          if(user.uid == item.senderid ){
+               dispatch(selecteduser({name : item.recivername, email :item.reciveremail, id:item.reciverid}))
+
+          }else{
+                  dispatch(selecteduser({name : item.sendername, email :item.senderemail, id:item.senderid}))
+          }
+     }
 
      return (
           <div className="w-1/4 bg-white border-r border-gray-300">
@@ -45,7 +57,7 @@ const Sidebar = () => {
                {/* Contact List */}
                <div className="overflow-y-auto h-screen p-3 mb-9 pb-20">
                     {friendList.map((item) => (
-                         <div className="flex items-center mb-4 cursor-pointer hover:bg-gray-100 p-2 rounded-md">
+                         <div onClick={()=>handleSelectFriend(item)} className={`flex items-center mb-4 cursor-pointer ${item.senderid== selected.id || item.reciverid == selected.id ? "bg-green-500"  :"bg-white"}  p-2 rounded-md`}>
                               <div className="w-12 h-12 bg-gray-300 rounded-full mr-3">
                                    <img
                                         src="https://placehold.co/200x/ffa8e4/ffffff.svg?text=ʕ•́ᴥ•̀ʔ&font=Lato"
@@ -55,12 +67,18 @@ const Sidebar = () => {
                               </div>
                               <div className="flex-1">
                                    {user.uid == item.senderid ?
-                                        <h2 className="text-lg font-semibold">{item.recivername}</h2>
+                                   <>
+                                   <h2 className="text-lg font-semibold">{item.recivername}</h2>
+                                                <p className="text-gray-600">{item.reciveremail}</p>
+                                   </>
 
                                         :
+                                        <>
                                         <h2 className="text-lg font-semibold">{item.sendername}</h2>
+                                                     <p className="text-gray-600">{item.senderemail}</p>
+                                        </>
                                    }
-                                   <p className="text-gray-600">Hoorayy!!</p>
+                      
                               </div>
                          </div>
 

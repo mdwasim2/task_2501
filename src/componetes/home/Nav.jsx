@@ -58,7 +58,7 @@ const Nav = ({ userinfo }) => {
   return (
     <>
       {/* Floating Bottom Nav */}
-      <div className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50">
+      <div className="fixed bottom-5 left-1/2 -translate-x-1/2 z-50">
         <div className="flex gap-8 bg-teal-800/80 backdrop-blur-md px-6 py-3 rounded-2xl shadow-lg border border-teal-700/40">
           {navItems.map((item) => (
             <button
